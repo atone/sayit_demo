@@ -45,7 +45,3 @@ def get_response(image):
     response_text = completion.choices[0].message.content
     speak_text_async(response_text)
     return response_text
-
-
-if __name__ == "__main__":
-    get_response()
