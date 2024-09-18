@@ -14,7 +14,7 @@ with gr.Blocks() as demo:
 
     with gr.Row():
         with gr.Column():
-            video_input = gr.Video(sources=["webcam"], format="mp4", label="Video Input")
+            video_input = gr.Video(sources=["webcam"], format="mp4", mirror_webcam=False, label="Video Input")
             save_button = gr.Button("Send")
         output_text = gr.Textbox(label="Result")
 
