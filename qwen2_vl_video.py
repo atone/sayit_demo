@@ -5,6 +5,7 @@ load_dotenv()
 from http import HTTPStatus
 from speech_synthesis import speak_text_async
 import dashscope
+import time
 
 
 def get_response(video):
@@ -23,10 +24,13 @@ def get_response(video):
             ]
         }
     ]
+    start = time.time()
     response = dashscope.MultiModalConversation.call(
         model='qwen-vl-max',
         messages=messages
-        )
+    )
+    end = time.time()
+    print(f'获得response，耗时{end-start}秒')
     if response.status_code == HTTPStatus.OK:
         text = response.output.choices[0].message.content[0]['text']
         speak_text_async(text)
