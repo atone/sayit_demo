@@ -1,6 +1,8 @@
 import os
 import time
 import tempfile
+import sys
+import select
 import cv2
 from collections import deque
 from datetime import datetime
@@ -85,28 +87,25 @@ def main():
 
     try:
         out_raw = get_raw_video_writer(frame_buffer, fps, width, height, work_dir)
+        print("按 's' 开始识别内容，按 'q' 退出程序")
+
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
 
-            # 将当前帧添加到缓冲区
             frame_buffer.append(frame)
-
-            # 写入原始视频
             out_raw.write(frame)
 
-            # 显示当前帧（可选）
-            cv2.imshow('Camera', frame)
+            # 非阻塞方式检查键盘输入
+            if select.select([sys.stdin], [], [], 0.0)[0]:
+                key = sys.stdin.read(1)
+                if key == 'q':
+                    break
+                elif key == 's':
+                    process = Process(target=make_action, args=(frame_buffer, fps, width, height, work_dir))
+                    process.start()
 
-            # 检查键盘输入
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord('q'):
-                break
-            elif key == ord('s'):
-                # 开启一个新进程运行预定动作
-                process = Process(target=make_action, args=(frame_buffer, fps, width, height, work_dir))
-                process.start()
     finally:
         cap.release()
         out_raw.release()
