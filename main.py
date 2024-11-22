@@ -1,4 +1,5 @@
 import os
+import time
 import tempfile
 import cv2
 from collections import deque
@@ -63,10 +64,21 @@ def main():
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
     # 获取视频的帧率和尺寸
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    read_fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    print(f"fps: {fps}, width: {width}, height: {height}")
+    print(f"fps: {read_fps}, width: {width}, height: {height}")
+
+    # 在开始录制之前，先测量实际帧率
+    frame_count = 0
+    start_time = time.time()
+    while frame_count < 60:  # 收集60帧来计算实际帧率
+        ret, _ = cap.read()
+        if ret:
+            frame_count += 1
+    actual_fps = frame_count / (time.time() - start_time)
+    print(f"实际帧率: {actual_fps}")
+    fps = int(actual_fps)
 
     # 创建一个双端队列来存储最近5秒的帧
     frame_buffer = deque(maxlen=5 * fps)
