@@ -1,10 +1,6 @@
-from dotenv import load_dotenv
-load_dotenv()
-
-
-from http import HTTPStatus
-import dashscope
 import time
+import dashscope
+from http import HTTPStatus
 
 def get_response(picture_list):
     messages = [

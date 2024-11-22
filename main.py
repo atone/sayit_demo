@@ -7,9 +7,11 @@ import cv2
 from collections import deque
 from datetime import datetime
 from multiprocessing import Process
+from dotenv import load_dotenv
 from qwen2_vl_video import get_response
 from speech_synthesis import speak_text
 
+load_dotenv()
 SAVE_DIR = os.path.join(os.path.dirname(__file__), "saved_videos")
 
 # 执行预定动作
